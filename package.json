@@ -1,6 +1,10 @@
 {
   "name": "growth-point",
   "version": "0.1.0",
+  "engineStrict": true,
+  "engines": {
+    "node": "12.18.4"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
