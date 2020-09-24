@@ -17,7 +17,6 @@ const Hackathons = ({ hackathons: initialHackathons, error: initialError }: Hack
 
   useEffect(() => {
     if (hackathons || error) return;
-
     const fetchHackathons = async () => {
       try {
         const { data } = await axios.get<HackathonsApi>(endpoints.api.hackathons);
