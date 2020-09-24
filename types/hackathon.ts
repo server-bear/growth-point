@@ -1,4 +1,4 @@
-export type Hackaton = {
+export type Hackathon = {
   id: string;
   name: string;
   description: string;

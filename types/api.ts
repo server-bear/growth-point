@@ -1,5 +1,5 @@
-import { Hackaton } from './hackaton';
+import { Hackathon } from './hackathon';
 
-export type HackatonsApi = {
-  hackatons: Hackaton[];
+export type HackathonsApi = {
+  hackathons: Hackathon[];
 };

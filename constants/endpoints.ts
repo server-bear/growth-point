@@ -1,10 +1,10 @@
 const endpoints = {
   pages: {
     index: '/',
-    hackatons: '/hackatons',
+    hackathons: '/hackathons',
   },
   api: {
-    hackatons: '/api/hackatons',
+    hackathons: '/api/hackathons',
   },
 };
 
