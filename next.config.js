@@ -49,4 +49,5 @@ module.exports = withBundleAnalyzer(withPrefresh({
 
     return config;
   },
+  target: 'serverless',
 }));
