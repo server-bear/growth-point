@@ -4,10 +4,10 @@
  * */
 export type User = {
   id: string;
-  firstName: string | null;
+  firstName: string;
   lastName?: string;
-  email: string | null;
-  photoURL: string | null
+  email: string;
+  photoURL?: string;
   age?: number;
   region?: string;
 };

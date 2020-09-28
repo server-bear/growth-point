@@ -6,8 +6,8 @@ const allowRoutes = [
   endpoints.pages.signup,
 ];
 
-function redirectLogin(req: IncomingMessage, res: ServerResponse | undefined) {
-  if (res && !allowRoutes.includes(req.url as string)) {
+function redirectLogin(req: IncomingMessage, res: ServerResponse) {
+  if (!allowRoutes.includes(req.url ?? '')) {
     res.writeHead(302, { Location: endpoints.pages.login });
     res.end();
   }

@@ -1,3 +1,5 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+const { IgnorePlugin } = require('webpack');
 const withPrefresh = require('@prefresh/next');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
@@ -28,6 +30,8 @@ module.exports = withBundleAnalyzer(withPrefresh({
       config.externals.push(
         /^(preact|preact-render-to-string|preact-context-provider)([\\/]|$)/,
       );
+    } else {
+      config.plugins.push(new IgnorePlugin(/firebase/));
     }
 
     // Install webpack aliases:

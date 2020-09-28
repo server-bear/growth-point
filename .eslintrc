@@ -4,9 +4,10 @@
     "project": "./tsconfig.json"
   },
   "rules": {
+    "jsx-a11y/anchor-is-valid": "off",
     "react/react-in-jsx-scope": "off",
     "react/jsx-props-no-spreading": "off",
-    "jsx-a11y/anchor-is-valid": "off",
+    "react/prop-types": "off",
     "react/jsx-sort-props": [
       "error",
       {
@@ -16,6 +17,7 @@
         "noSortAlphabetically": false,
         "reservedFirst": true
       }
-    ]
+    ],
+    "no-console": ["warn", { "allow": ["error"] }]
   }
 }

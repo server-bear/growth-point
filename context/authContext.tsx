@@ -2,7 +2,6 @@ import React, {
   createContext,
   ReactNode,
   useContext,
-  useEffect,
   useState,
 } from 'react';
 
@@ -21,14 +20,13 @@ interface ISignUp {
 }
 
 interface ILoginContext {
-  user: User | null
+  user?: User | null
   login: (email: string, password: string) => void
   logout: () => void
   signup: (formData: ISignUp) => void
 }
 
-export const AuthContext = createContext<ILoginContext>({
-  user: null,
+const AuthContext = createContext<ILoginContext>({
   login: () => {},
   logout: () => {},
   signup: () => {},
@@ -37,17 +35,13 @@ export const AuthContext = createContext<ILoginContext>({
 type AuthContextCompProps = {
   children: ReactNode | ReactNode[]
   token?: string
-  user: User
+  user?: User | null
 };
 
 export function AuthProvider({ children, user: initialUser }: AuthContextCompProps) {
-  const [user, setUser] = useState<User | null>(initialUser);
+  const [user, setUser] = useState(initialUser);
 
   const router = useRouter();
-
-  useEffect(() => {
-    setUser(initialUser);
-  }, [initialUser]);
 
   const login = async (email: string, password: string) => {
     try {
@@ -63,6 +57,7 @@ export function AuthProvider({ children, user: initialUser }: AuthContextCompPro
 
   const logout = async () => {
     await axios.get<LoginResponse>(endpoints.api.logout);
+
     setUser(null);
     await router.push(endpoints.pages.login);
   };
@@ -77,7 +72,7 @@ export function AuthProvider({ children, user: initialUser }: AuthContextCompPro
   return (
     <AuthContext.Provider value={{
       user, login, logout, signup,
-    } as ILoginContext}
+    }}
     >
       {children}
     </AuthContext.Provider>

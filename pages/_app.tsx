@@ -1,59 +1,53 @@
-import React from 'react';
-import App, { AppContext, AppProps } from 'next/app';
-import 'bulma/css/bulma.css';
-
+import App, { AppContext, AppProps, AppInitialProps } from 'next/app';
 import { AuthProvider } from '../context/authContext';
-import endpoints from '../constants/endpoints';
 import { User } from '../types/user';
-import getOriginFromRequest from '../utils/server/getOriginFromRequest';
 import redirectLogin from '../utils/auth/redirect';
 
+import 'bulma/css/bulma.css';
+
 type MyProps = {
-  user: User
+  user?: User
 };
 
-function MyApp({
-  Component, pageProps, user,
-}: AppProps & MyProps) {
-  return (
-    <AuthProvider user={user}>
-      <Component {...pageProps} />
-    </AuthProvider>
-  );
-}
+const MyApp = ({ Component, pageProps, user }: AppProps & MyProps) => (
+  <AuthProvider user={user}>
+    <Component {...pageProps} />
+  </AuthProvider>
+);
 
-MyApp.getInitialProps = async (appContext: AppContext): Promise<any> => {
+MyApp.getInitialProps = async (appContext: AppContext): Promise<AppInitialProps & MyProps> => {
   const appProps = await App.getInitialProps(appContext);
-
   const { res, req } = appContext.ctx;
 
-  if (!req) return { ...appProps };
-  const url = getOriginFromRequest(req);
+  if (!req || !res) {
+    return { ...appProps };
+  }
 
-  const { parse } = await import('cookie');
-  const { default: axios } = await import('axios');
+  try {
+    const { parse } = await import('cookie');
+    const { token } = parse(req.headers.cookie ?? '');
 
-  const { token } = parse(req.headers.cookie ?? '');
+    if (token) {
+      const { default: getUser } = await import('../utils/firebase/getUser');
+      const userData = await getUser(token);
 
-  let user = null;
+      if (userData) {
+        return { ...appProps, user: userData };
+      }
 
-  if (token) {
-    const { data: userRes, status } = await axios.get(url + endpoints.api.getUser, {
-      headers: {
-        token,
-      },
-    });
-
-    if (status === 200) {
-      user = userRes;
+      redirectLogin(req, res);
     } else {
       redirectLogin(req, res);
     }
-  } else {
-    redirectLogin(req, res);
-  }
 
-  return { ...appProps, user };
+    return { ...appProps };
+  } catch (e) {
+    console.error(e);
+
+    redirectLogin(req, res);
+
+    return { ...appProps };
+  }
 };
 
 export default MyApp;

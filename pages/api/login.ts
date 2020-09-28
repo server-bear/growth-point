@@ -1,29 +1,22 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { serialize } from 'cookie';
-import firebaseClient from '../../utils/server/firebaseClient';
+import login from '../../utils/firebase/login';
+import endpoints from '../../constants/endpoints';
 
-const login = async (req: NextApiRequest, res: NextApiResponse) => {
+const handleLogin = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const { email, password } = req.body;
-    await firebaseClient.auth().setPersistence(firebaseClient.auth.Auth.Persistence.NONE);
+    const { user, token, expirationTime } = await login(req.body);
 
-    const { user } = await firebaseClient.auth().signInWithEmailAndPassword(email, password);
-    const tokenResult = await user?.getIdTokenResult();
+    res.setHeader('Set-Cookie', serialize('token', token, {
+      path: endpoints.pages.index,
+      httpOnly: true,
+      expires: new Date(expirationTime),
+    }));
 
-    await firebaseClient.auth().signOut();
-
-    res.setHeader(
-      'Set-Cookie',
-      serialize('token', tokenResult?.token ?? '', {
-        expires: new Date(tokenResult?.expirationTime ?? ''),
-        path: '/',
-        httpOnly: true,
-      }),
-    );
     res.status(200).json({ user });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 };
 
-export default login;
+export default handleLogin;
