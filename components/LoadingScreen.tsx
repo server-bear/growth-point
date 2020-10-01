@@ -12,7 +12,7 @@ const LoadingScreen: FunctionComponent<Props> = () => (
   >
     <div>
 
-      <h1 className="title is-1">Title 1</h1>
+      <h1 className="title is-1">Точки роста</h1>
       <progress className="progress is-small is-primary" max="100">15%</progress>
     </div>
   </div>

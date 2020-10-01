@@ -1,7 +1,12 @@
 import React, {
-  createContext, ReactNode, useContext, useEffect, useState,
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
 } from 'react';
 import Cookies from 'js-cookie';
+
 import axios from 'axios';
 
 import { useRouter } from 'next/router';
@@ -36,40 +41,30 @@ export const AuthContext = createContext<ILoginContext>({
 
 type AuthContextCompProps = {
   children: ReactNode | ReactNode[]
+  token: string
 };
 
-export default function UserContextComp({ children }: AuthContextCompProps) {
+function AuthContextComp({ children, token }: AuthContextCompProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true); // Helpful, to update the UI accordingly.
 
   const router = useRouter();
 
-  // useEffect(() => firebaseClient.auth().onIdTokenChanged(async (_user) => {
-  //   console.log('auth changed');
-  //   console.log(_user ? _user.uid : 'NO USER');
-  //   if (!_user) {
-  //     setUser(null);
-  //     Cookies.set('token', '', {});
-  //     return;
-  //   }
-  //
-  //   const token = await _user.getIdToken();
-  //   setUser(_user);
-  //   Cookies.set('token', token, { expires: 1 });
-  // }), []);
-
   useEffect(() => {
     async function loadUser() {
-      const token = Cookies.get('token');
-      if (token) {
-        const { data: userRes } = await axios.get(endpoints.api.getUser, {
-          headers: {
-            token,
-          },
-        });
-        setUser(userRes);
-      } else {
-        // router.replace(endpoints.pages.login);
+      try {
+        if (token) {
+          const { data: userRes } = await axios.get(endpoints.api.getUser, {
+            headers: {
+              token,
+            },
+          });
+          setUser(userRes);
+        } else {
+          throw Error('Token is invzlid');
+        }
+      } catch (e) {
+        router.replace(endpoints.pages.login);
       }
       setLoading(false);
     }
@@ -115,3 +110,5 @@ export default function UserContextComp({ children }: AuthContextCompProps) {
 
 // Custom hook that shorthands the context!
 export const useAuth = () => useContext(AuthContext);
+
+export default AuthContextComp;

@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from './authContext';
 import LoadingScreen from '../components/LoadingScreen';
@@ -16,12 +16,6 @@ type Props = {
 const ProtectRoute = ({ children }: Props) => {
   const { isAuthenticated, loading } = useAuth();
   const router = useRouter();
-
-  useEffect(() => {
-    if (!loading && !isAuthenticated && !allowRoutes.includes(router.pathname)) {
-      router.replace(endpoints.pages.login);
-    }
-  }, [isAuthenticated, loading]);
 
   if (loading || (!isAuthenticated && !allowRoutes.includes(router.pathname))) {
     return <LoadingScreen />;

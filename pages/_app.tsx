@@ -1,13 +1,19 @@
 import React from 'react';
-import { AppProps } from 'next/app';
-import AuthProvider from '../context/authContext';
+import App, { AppProps, AppContext } from 'next/app';
 import 'bulma/css/bulma.css';
+import ServerCookies from 'cookies';
+import { ServerResponse } from 'http';
+
+import AuthProvider from '../context/authContext';
 import ProtectRoute from '../context/ProtectRoute';
 
-// Custom App to wrap it with context provider
-function App({ Component, pageProps }: AppProps) {
+type MyProps = {
+  token: string
+};
+
+function MyApp({ Component, pageProps, token }: AppProps & MyProps) {
   return (
-    <AuthProvider>
+    <AuthProvider token={token}>
       <ProtectRoute>
         <Component {...pageProps} />
       </ProtectRoute>
@@ -15,4 +21,17 @@ function App({ Component, pageProps }: AppProps) {
   );
 }
 
-export default App;
+MyApp.getInitialProps = async (appContext: AppContext): Promise<any> => {
+  const appProps = await App.getInitialProps(appContext);
+
+  const { res, req } = appContext.ctx;
+
+  if (!req) return { ...appProps };
+  const cookies = new ServerCookies(req, res as ServerResponse);
+
+  const token = cookies.get('token');
+
+  return { ...appProps, token };
+};
+
+export default MyApp;
