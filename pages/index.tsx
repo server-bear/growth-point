@@ -1,29 +1,12 @@
 import Link from 'next/link';
-import React, { useEffect } from 'react';
+import React from 'react';
 import endpoints from '../constants/endpoints';
-import { useUser } from '../context/userContext';
-import firebase from '../utils/server/firebaseClient';
-import LoginForm from '../components/LoginForm';
+import { useAuth } from '../context/authContext';
 import Header from '../components/Header';
 
 const Home = () => {
   // Our custom hook to get context values
-  const { loadingUser, user } = useUser();
-
-  useEffect(() => {
-    if (!loadingUser) {
-      // You know that the user is loaded: either logged in or out!
-      console.log(user);
-    }
-    // You also have your firebase app initialized
-    console.log(firebase);
-  }, [loadingUser, user]);
-
-  if (!user) {
-    return (
-      <LoginForm />
-    );
-  }
+  const { user } = useAuth();
 
   return (
     <>
@@ -33,7 +16,10 @@ const Home = () => {
           <div className="hero-body">
             <div className="container">
               <h1 className="title">
-                Привет!
+                Привет,
+                {' '}
+                {user?.email}
+                !
               </h1>
               <h2 className="subtitle">
                 <Link href={endpoints.pages.hackathons}>

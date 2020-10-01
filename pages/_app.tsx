@@ -1,13 +1,18 @@
 import React from 'react';
 import { AppProps } from 'next/app';
-import UserProvider from '../context/userContext';
+import AuthProvider from '../context/authContext';
 import 'bulma/css/bulma.css';
+import ProtectRoute from '../context/ProtectRoute';
 
 // Custom App to wrap it with context provider
-export default function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
   return (
-    <UserProvider>
-      <Component {...pageProps} />
-    </UserProvider>
+    <AuthProvider>
+      <ProtectRoute>
+        <Component {...pageProps} />
+      </ProtectRoute>
+    </AuthProvider>
   );
 }
+
+export default App;

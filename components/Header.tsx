@@ -1,32 +1,33 @@
 import React, { FunctionComponent } from 'react';
-import firebase from '../utils/server/firebaseClient';
+import { useAuth } from '../context/authContext';
 
 interface OwnProps {}
 
 type Props = OwnProps;
 
 const Header: FunctionComponent<Props> = () => {
+  const { logout } = useAuth();
   const handleLogout = () => {
-    firebase.auth().signOut();
+    logout();
   };
   return (
-    <nav className="navbar" role="navigation" aria-label="main navigation">
+    <nav aria-label="main navigation" className="navbar" role="navigation">
       <div className="navbar-brand">
         <a className="navbar-item" href="https://bulma.io">
           <img
             alt="logo"
+            height="28"
             src="https://bulma.io/images/bulma-logo.png"
             width="112"
-            height="28"
           />
         </a>
 
         <a
-          role="button"
-          className="navbar-burger burger"
-          aria-label="menu"
           aria-expanded="false"
+          aria-label="menu"
+          className="navbar-burger burger"
           data-target="navbarBasicExample"
+          role="button"
         >
           <span aria-hidden="true" />
           <span aria-hidden="true" />
@@ -34,7 +35,7 @@ const Header: FunctionComponent<Props> = () => {
         </a>
       </div>
 
-      <div id="navbarBasicExample" className="navbar-menu">
+      <div className="navbar-menu" id="navbarBasicExample">
         <div className="navbar-start">
           <a className="navbar-item">
             Лента
@@ -70,10 +71,10 @@ const Header: FunctionComponent<Props> = () => {
         <div className="navbar-end">
           <div className="navbar-item">
             <div className="buttons">
-              <a className="button is-primary">
-                <strong>Sign up</strong>
-              </a>
-              <button type="button" className="button is-light" onClick={handleLogout}>
+              {/* <a className="button is-primary"> */}
+              {/*  <strong>Sign up</strong> */}
+              {/* </a> */}
+              <button className="button is-light" type="button" onClick={handleLogout}>
                 Выйти
               </button>
             </div>

@@ -6,6 +6,16 @@
   "rules": {
     "react/react-in-jsx-scope": "off",
     "react/jsx-props-no-spreading": "off",
-    "jsx-a11y/anchor-is-valid": "off"
+    "jsx-a11y/anchor-is-valid": "off",
+    "react/jsx-sort-props": [
+      "error",
+      {
+        "callbacksLast": true,
+        "shorthandFirst": true,
+        "ignoreCase": false,
+        "noSortAlphabetically": false,
+        "reservedFirst": true
+      }
+    ]
   }
 }
