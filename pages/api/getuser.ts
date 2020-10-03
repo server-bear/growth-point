@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { firebaseAdmin } from '../../utils/server/firebaseAdmin';
+import firebaseAdmin from '../../utils/server/firebaseAdmin';
 import { verifyToken } from '../../utils/server/verifyToken';
 
 const getuser = async (req: NextApiRequest, res: NextApiResponse) => {

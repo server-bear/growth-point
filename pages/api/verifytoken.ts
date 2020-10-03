@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { firebaseAdmin } from '../../utils/server/firebaseAdmin';
+import firebaseAdmin from '../../utils/server/firebaseAdmin';
 
 const verifytoken = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

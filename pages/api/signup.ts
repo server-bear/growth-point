@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { serialize } from 'cookie';
 import firebaseClient from '../../utils/server/firebaseClient';
-import { firebaseAdmin } from '../../utils/server/firebaseAdmin';
+import firebaseAdmin from '../../utils/server/firebaseAdmin';
 
 const signup = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

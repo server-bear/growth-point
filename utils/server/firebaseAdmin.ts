@@ -13,5 +13,4 @@ if (!firebaseAdmin.apps.length) {
   });
 }
 
-// eslint-disable-next-line import/prefer-default-export
-export { firebaseAdmin };
+export default firebaseAdmin;
