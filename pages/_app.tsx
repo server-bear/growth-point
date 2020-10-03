@@ -1,22 +1,24 @@
 import React from 'react';
-import App, { AppProps, AppContext } from 'next/app';
+import App, { AppContext, AppProps } from 'next/app';
 import 'bulma/css/bulma.css';
-import ServerCookies from 'cookies';
-import { ServerResponse } from 'http';
 
 import AuthProvider from '../context/authContext';
-import ProtectRoute from '../context/ProtectRoute';
+import endpoints from '../constants/endpoints';
+import { User } from '../types/user';
+import getOriginFromRequest from '../utils/server/getOriginFromRequest';
+import { redirectLogin } from '../utils/auth/redirect';
 
 type MyProps = {
   token: string
+  user: User
 };
 
-function MyApp({ Component, pageProps, token }: AppProps & MyProps) {
+function MyApp({
+  Component, pageProps, user,
+}: AppProps & MyProps) {
   return (
-    <AuthProvider token={token}>
-      <ProtectRoute>
-        <Component {...pageProps} />
-      </ProtectRoute>
+    <AuthProvider user={user}>
+      <Component {...pageProps} />
     </AuthProvider>
   );
 }
@@ -27,11 +29,34 @@ MyApp.getInitialProps = async (appContext: AppContext): Promise<any> => {
   const { res, req } = appContext.ctx;
 
   if (!req) return { ...appProps };
-  const cookies = new ServerCookies(req, res as ServerResponse);
+  const url = getOriginFromRequest(req);
+
+  const { default: ServerCookies } = await import('cookies');
+  const { default: axios } = await import('axios');
+
+  const cookies = new ServerCookies(req, res as any);
 
   const token = cookies.get('token');
 
-  return { ...appProps, token };
+  let user = null;
+
+  if (token) {
+    const { data: userRes, status } = await axios.get(url + endpoints.api.getUser, {
+      headers: {
+        token,
+      },
+    });
+
+    if (status === 200) {
+      user = userRes;
+    } else {
+      redirectLogin(req, res);
+    }
+  } else {
+    redirectLogin(req, res);
+  }
+
+  return { ...appProps, token, user };
 };
 
 export default MyApp;

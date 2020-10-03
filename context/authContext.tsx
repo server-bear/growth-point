@@ -5,7 +5,6 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import Cookies from 'js-cookie';
 
 import axios from 'axios';
 
@@ -41,36 +40,19 @@ export const AuthContext = createContext<ILoginContext>({
 
 type AuthContextCompProps = {
   children: ReactNode | ReactNode[]
-  token: string
+  token?: string
+  user: User
 };
 
-function AuthContextComp({ children, token }: AuthContextCompProps) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true); // Helpful, to update the UI accordingly.
+function AuthContextComp({ children, user: initialUser }: AuthContextCompProps) {
+  const [user, setUser] = useState<User | null>(initialUser);
+  // const [loading, setLoading] = useState(true); // Helpful, to update the UI accordingly.
 
   const router = useRouter();
 
   useEffect(() => {
-    async function loadUser() {
-      try {
-        if (token) {
-          const { data: userRes } = await axios.get(endpoints.api.getUser, {
-            headers: {
-              token,
-            },
-          });
-          setUser(userRes);
-        } else {
-          throw Error('Token is invzlid');
-        }
-      } catch (e) {
-        router.replace(endpoints.pages.login);
-      }
-      setLoading(false);
-    }
-
-    loadUser();
-  }, []);
+    setUser(initialUser);
+  }, [initialUser]);
 
   const login = async (email: string, password: string) => {
     try {
@@ -85,7 +67,8 @@ function AuthContextComp({ children, token }: AuthContextCompProps) {
   };
 
   const logout = async () => {
-    Cookies.remove('token');
+    // Cookies.remove('token');
+    await axios.get<LoginResponse>(endpoints.api.logout);
     router.push(endpoints.pages.login);
     setUser(null);
   };
@@ -100,7 +83,7 @@ function AuthContextComp({ children, token }: AuthContextCompProps) {
 
   return (
     <AuthContext.Provider value={{
-      isAuthenticated: !!user, user, login, logout, signup, loading,
+      isAuthenticated: !!user, user, login, logout, signup, loading: false,
     } as ILoginContext}
     >
       {children}

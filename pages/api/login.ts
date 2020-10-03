@@ -8,14 +8,21 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
     await firebaseClient.auth().setPersistence(firebaseClient.auth.Auth.Persistence.NONE);
 
     const { user } = await firebaseClient.auth().signInWithEmailAndPassword(email, password);
-    const token = await user?.getIdToken();
+    const tokenResult = await user?.getIdTokenResult();
 
     await firebaseClient.auth().signOut();
 
-    res.setHeader('Set-Cookie', serialize('token', token ?? '', { path: '/', httpOnly: true }));
-    res.status(200).json({ user, token });
+    res.setHeader(
+      'Set-Cookie',
+      serialize('token', tokenResult?.token ?? '', {
+        expires: new Date(tokenResult?.expirationTime ?? ''),
+        path: '/',
+        httpOnly: true,
+      }),
+    );
+    res.status(200).json({ user, token: tokenResult?.token });
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    res.status(500).json({ error: e.message, code: e.data.code });
   }
 };
 
