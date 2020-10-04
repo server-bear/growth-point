@@ -40,9 +40,11 @@ const Hackathons = ({ hackathons: initialHackathons, error: initialError }: Hack
   }
 
   return (
-    <ul>
-      {hackathons.map(({ id, name }) => <li key={id}>{name}</li>)}
-    </ul>
+    <div className="box">
+      <ul>
+        {hackathons.map(({ id, name }) => <li key={id}>{name}</li>)}
+      </ul>
+    </div>
   );
 };
 
