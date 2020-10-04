@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from '../context/authContext';
 
@@ -9,18 +9,14 @@ type FormTypes = {
   password: string
 };
 
-type Props = {
-
-};
-
-const SignupForm: FunctionComponent<Props> = () => {
+const SignupForm = () => {
   const {
     register, handleSubmit,
   } = useForm<FormTypes>();
 
   const { signup } = useAuth();
 
-  const onSubmit: SubmitHandler<FormTypes> = async (formData) => {
+  const onSubmit: SubmitHandler<FormTypes> = (formData) => {
     signup({
       firstName: formData.firstName,
       lastName: formData.lastName,
@@ -35,8 +31,7 @@ const SignupForm: FunctionComponent<Props> = () => {
       style={{
         padding: 16,
         width: 360,
-        margin: '100px'
-          + ' auto',
+        margin: '100px auto',
       }}
       onSubmit={handleSubmit(onSubmit)}
     >

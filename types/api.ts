@@ -2,7 +2,6 @@ import { Hackathon } from './hackathon';
 import { User } from './user';
 
 export type LoginResponse = {
-  token: string;
   user: User
 };
 

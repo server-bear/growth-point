@@ -1,11 +1,7 @@
-import React, { FunctionComponent } from 'react';
+import React from 'react';
 import { useAuth } from '../context/authContext';
 
-interface OwnProps {}
-
-type Props = OwnProps;
-
-const Header: FunctionComponent<Props> = () => {
+const Header = () => {
   const { logout } = useAuth();
   const handleLogout = () => {
     logout();
@@ -71,9 +67,6 @@ const Header: FunctionComponent<Props> = () => {
         <div className="navbar-end">
           <div className="navbar-item">
             <div className="buttons">
-              {/* <a className="button is-primary"> */}
-              {/*  <strong>Sign up</strong> */}
-              {/* </a> */}
               <button className="button is-light" type="button" onClick={handleLogout}>
                 Выйти
               </button>

@@ -10,7 +10,6 @@ const endpoints = {
     signup: '/api/signup',
     logout: '/api/logout',
 
-    verifyToken: '/api/verifytoken',
     getUser: '/api/getuser',
 
     hackathons: '/api/hackathons',

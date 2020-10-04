@@ -2,14 +2,13 @@ import React from 'react';
 import App, { AppContext, AppProps } from 'next/app';
 import 'bulma/css/bulma.css';
 
-import AuthProvider from '../context/authContext';
+import { AuthProvider } from '../context/authContext';
 import endpoints from '../constants/endpoints';
 import { User } from '../types/user';
 import getOriginFromRequest from '../utils/server/getOriginFromRequest';
-import { redirectLogin } from '../utils/auth/redirect';
+import redirectLogin from '../utils/auth/redirect';
 
 type MyProps = {
-  token: string
   user: User
 };
 
@@ -31,12 +30,10 @@ MyApp.getInitialProps = async (appContext: AppContext): Promise<any> => {
   if (!req) return { ...appProps };
   const url = getOriginFromRequest(req);
 
-  const { default: ServerCookies } = await import('cookies');
+  const { parse } = await import('cookie');
   const { default: axios } = await import('axios');
 
-  const cookies = new ServerCookies(req, res as any);
-
-  const token = cookies.get('token');
+  const { token } = parse(req.headers.cookie ?? '');
 
   let user = null;
 
@@ -56,7 +53,7 @@ MyApp.getInitialProps = async (appContext: AppContext): Promise<any> => {
     redirectLogin(req, res);
   }
 
-  return { ...appProps, token, user };
+  return { ...appProps, user };
 };
 
 export default MyApp;

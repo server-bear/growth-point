@@ -1,5 +1,5 @@
 import firebaseAdmin from './firebaseAdmin';
 
-// eslint-disable-next-line import/prefer-default-export
-export const verifyToken = (token: string) => firebaseAdmin.auth().verifyIdToken(token)
-  .catch((error) => { throw error; });
+const verifyToken = async (token: string) => firebaseAdmin.auth().verifyIdToken(token);
+
+export default verifyToken;

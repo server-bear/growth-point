@@ -1,6 +1,14 @@
 import firebaseAdmin from 'firebase-admin';
-import serviceAccount from '../../tochki-rosta-firebase-adminsdk-yy8zy-54717621fb.json';
-import credentials from '../../secret.json';
+
+const serviceAccount = {
+  private_key: process.env.PRIVATE_KEY,
+  client_email: process.env.CLIENT_EMAIL,
+  project_id: process.env.PROJECT_ID,
+};
+
+const credentials = {
+  databaseURL: process.env.DATABASE_URL,
+};
 
 if (!firebaseAdmin.apps.length) {
   firebaseAdmin.initializeApp({

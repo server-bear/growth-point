@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import firebaseAdmin from '../../utils/server/firebaseAdmin';
-import { verifyToken } from '../../utils/server/verifyToken';
+import verifyToken from '../../utils/server/verifyToken';
 
 const getuser = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -9,8 +9,6 @@ const getuser = async (req: NextApiRequest, res: NextApiResponse) => {
     const decodedToken = await verifyToken(token as string);
 
     if (decodedToken) {
-      // const user = firebaseAdmin.auth().getuser(decodedToken.uid);
-
       const usersRef = firebaseAdmin.database().ref('users');
       const snapshot = await usersRef.once('value');
       const user = snapshot.child(decodedToken.uid).exportVal();

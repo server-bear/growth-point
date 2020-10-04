@@ -21,21 +21,17 @@ interface ISignUp {
 }
 
 interface ILoginContext {
-  isAuthenticated: boolean
   user: User | null
   login: (email: string, password: string) => void
   logout: () => void
   signup: (formData: ISignUp) => void
-  loading: boolean
 }
 
 export const AuthContext = createContext<ILoginContext>({
-  isAuthenticated: false,
   user: null,
   login: () => {},
   logout: () => {},
   signup: () => {},
-  loading: true,
 });
 
 type AuthContextCompProps = {
@@ -44,9 +40,8 @@ type AuthContextCompProps = {
   user: User
 };
 
-function AuthContextComp({ children, user: initialUser }: AuthContextCompProps) {
+export function AuthProvider({ children, user: initialUser }: AuthContextCompProps) {
   const [user, setUser] = useState<User | null>(initialUser);
-  // const [loading, setLoading] = useState(true); // Helpful, to update the UI accordingly.
 
   const router = useRouter();
 
@@ -60,30 +55,28 @@ function AuthContextComp({ children, user: initialUser }: AuthContextCompProps) 
 
       router.push(endpoints.pages.index);
 
-      setUser(data.user as any);
+      setUser(data.user);
     } catch (e) {
       console.error(e);
     }
   };
 
   const logout = async () => {
-    // Cookies.remove('token');
     await axios.get<LoginResponse>(endpoints.api.logout);
-    router.push(endpoints.pages.login);
     setUser(null);
+    await router.push(endpoints.pages.login);
   };
 
   const signup = async (formData: ISignUp) => {
     const { data } = await axios.post<LoginResponse>(endpoints.api.signup, formData);
 
-    router.push(endpoints.pages.index);
-
-    if (setUser) { setUser(data.user as any); }
+    setUser(data.user);
+    await router.push(endpoints.pages.index);
   };
 
   return (
     <AuthContext.Provider value={{
-      isAuthenticated: !!user, user, login, logout, signup, loading: false,
+      user, login, logout, signup,
     } as ILoginContext}
     >
       {children}
@@ -91,7 +84,4 @@ function AuthContextComp({ children, user: initialUser }: AuthContextCompProps) 
   );
 }
 
-// Custom hook that shorthands the context!
 export const useAuth = () => useContext(AuthContext);
-
-export default AuthContextComp;

@@ -25,7 +25,4 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-secret.json
-tochki-rosta-firebase-adminsdk-yy8zy-54717621fb.json
-
 /.idea

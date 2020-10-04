@@ -20,9 +20,9 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
         httpOnly: true,
       }),
     );
-    res.status(200).json({ user, token: tokenResult?.token });
+    res.status(200).json({ user });
   } catch (e) {
-    res.status(500).json({ error: e.message, code: e.data.code });
+    res.status(500).json({ error: e.message });
   }
 };
 

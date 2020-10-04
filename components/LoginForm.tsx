@@ -1,16 +1,12 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../context/authContext';
 
-type Props = {
-
-};
-
-const LoginForm: FunctionComponent<Props> = () => {
+const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login } = useAuth();
 
-  const handleSignIn = async () => {
+  const handleSignIn = () => {
     if (email === '' || password === '') {
       // eslint-disable-next-line no-undef
       alert('Нужен логин / пароль');
@@ -25,8 +21,7 @@ const LoginForm: FunctionComponent<Props> = () => {
       style={{
         padding: 16,
         width: 360,
-        margin: '100px'
-          + ' auto',
+        margin: '100px auto',
       }}
     >
       <div className="field">
