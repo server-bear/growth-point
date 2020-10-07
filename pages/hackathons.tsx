@@ -1,19 +1,23 @@
 import { useEffect, useState } from 'react';
-import { NextPageContext } from 'next';
+import { NextPage } from 'next';
 import axios from 'axios';
 import { Hackathon } from '../types/hackathon';
 import { HackathonsApi } from '../types/api';
-import getOriginFromRequest from '../utils/server/getOriginFromRequest';
 import endpoints from '../constants/endpoints';
+import { useAuth } from '../context/authContext';
 
 type HackathonsProps = {
   hackathons?: Hackathon[];
   error?: string;
 };
 
-const Hackathons = ({ hackathons: initialHackathons, error: initialError }: HackathonsProps) => {
+const Hackathons: NextPage<HackathonsProps> = ({
+  hackathons: initialHackathons,
+  error: initialError,
+}) => {
   const [hackathons, updateHackathons] = useState(initialHackathons);
   const [error, updateError] = useState(initialError);
+  const { user } = useAuth();
 
   useEffect(() => {
     if (hackathons || error) return;
@@ -42,19 +46,23 @@ const Hackathons = ({ hackathons: initialHackathons, error: initialError }: Hack
   return (
     <div className="box">
       <ul>
+        <li>
+          email:
+          {' '}
+          {user?.email}
+        </li>
         {hackathons.map(({ id, name }) => <li key={id}>{name}</li>)}
       </ul>
     </div>
   );
 };
 
-Hackathons.getInitialProps = async ({ req }: NextPageContext): Promise<HackathonsProps> => {
+Hackathons.getInitialProps = async ({ req }): Promise<HackathonsProps> => {
   if (!req) return {};
 
   try {
-    const url = getOriginFromRequest(req) + endpoints.api.hackathons;
-    const res = await axios.get<HackathonsApi>(url);
-    const { hackathons } = res.data;
+    const { default: getHackathons } = await import('../utils/firebase/getHackathons');
+    const hackathons = await getHackathons();
 
     return { hackathons };
   } catch (e) {

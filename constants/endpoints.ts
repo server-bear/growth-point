@@ -9,9 +9,6 @@ const endpoints = {
     login: '/api/login',
     signup: '/api/signup',
     logout: '/api/logout',
-
-    getUser: '/api/getuser',
-
     hackathons: '/api/hackathons',
   },
 };

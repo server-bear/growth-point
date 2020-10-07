@@ -1,16 +1,18 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { serialize } from 'cookie';
+import endpoints from '../../constants/endpoints';
 
-const logout = async (req: NextApiRequest, res: NextApiResponse) => {
+const handleLogout = async (_: NextApiRequest, res: NextApiResponse) => {
   try {
-    res.setHeader(
-      'Set-Cookie',
-      serialize('token', '', { expires: new Date(), path: '/', httpOnly: true }),
-    );
+    res.setHeader('Set-Cookie', serialize('token', '', {
+      path: endpoints.pages.index,
+      httpOnly: true,
+    }));
+
     res.status(200).json({ status: 'OK' });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 };
 
-export default logout;
+export default handleLogout;
