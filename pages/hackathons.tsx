@@ -66,6 +66,8 @@ Hackathons.getInitialProps = async ({ req }): Promise<HackathonsProps> => {
 
     return { hackathons };
   } catch (e) {
+    console.error(e);
+
     return { error: e.message };
   }
 };
