@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'preact/compat';
 import { useAuth } from '../context/authContext';
 
 const LoginForm = () => {

@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import React from 'react';
 import endpoints from '../constants/endpoints';
 import Header from '../components/Header';
 import { useAuth } from '../context/authContext';

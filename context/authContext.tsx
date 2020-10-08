@@ -1,9 +1,9 @@
-import React, {
+import {
   createContext,
-  ReactNode,
   useContext,
   useState,
-} from 'react';
+  JSX,
+} from 'preact/compat';
 
 import axios from 'axios';
 
@@ -33,7 +33,7 @@ const AuthContext = createContext<ILoginContext>({
 });
 
 type AuthContextCompProps = {
-  children: ReactNode | ReactNode[]
+  children: JSX.Element
   token?: string
   user?: User | null
 };
