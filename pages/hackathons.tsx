@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'preact/compat';
 import { NextPage } from 'next';
 import axios from 'axios';
 import { Hackathon } from '../types/hackathon';
@@ -66,6 +66,8 @@ Hackathons.getInitialProps = async ({ req }): Promise<HackathonsProps> => {
 
     return { hackathons };
   } catch (e) {
+    console.error(e);
+
     return { error: e.message };
   }
 };
